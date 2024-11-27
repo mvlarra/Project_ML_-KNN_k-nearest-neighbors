@@ -6,7 +6,7 @@
 - Model the data using a KNN.
 - Analyze the results and optimize the model.
 
-<onlyfor saas="false" withBanner="false"
+<onlyfor saas="false" withBanner="false">
 
 ## 🌱 How to start this project
 
