@@ -10,5 +10,6 @@
 	"syntax": "python",
     "projectType": "project",
 	"duration" : 2,
+	"template_url": "https://github.com/4GeeksAcademy/machine-learning-python-template",
 	"description" : "Use KNN algorithm to build a simple movie recommender system."
 }
