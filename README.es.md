@@ -18,92 +18,78 @@ Sigue las siguientes instrucciones:
 
 </onlyfor>
 
-## 🚛 Cómo entregar este proyecto
-
-Una vez que hayas terminado de resolver el caso práctico, asegúrate de confirmar tus cambios, haz push a tu repositorio y ve a 4Geeks.com para subir el enlace del repositorio.
 
 ## 📝 Instrucciones
 
-### Sistema de recomendación de películas
 
-¿Seríamos capaces de predecir qué películas podrían ser o no un éxito comercial? Este conjunto de datos recopila parte del conocimiento de la API [TMDB](https://www.themoviedb.org/?language=es), que contiene solo 5000 películas del número total. Se dispone de los siguientes recursos:
+### Clasificador de Vinos con KNN
 
-- **tmdb_5000_movies**:
+Entrena un modelo de K-Vecinos más Cercanos (KNN) para predecir la calidad de un vino tinto a partir de sus características químicas. ¿Podría una IA ayudarte a elegir un vino digno de sommelier?
+
+Utilizaremos el siguiente dataset de vinos tintos extraido de [Wine Quality Data Set - UCI](https://archive.ics.uci.edu/dataset/186/wine+quality)
 
 ```text
-https://raw.githubusercontent.com/4GeeksAcademy/k-nearest-neighbors-project-tutorial/main/tmdb_5000_movies.csv
+https://raw.githubusercontent.com/4GeeksAcademy/k-nearest-neighbors-project-tutorial/main/winequality-red.csv
 ```
 
-- **tmdb_5000_credits**:
+#### Descripción de las columnas
 
-````text
-https://raw.githubusercontent.com/4GeeksAcademy/k-nearest-neighbors-project-tutorial/main/tmdb_5000_credits.csv
-```
+Cada fila representa un vino. Las columnas describen su composición química:
 
-#### Paso 1: Carga del conjunto de datos
+- fixed acidity, volatile acidity, citric acid
 
-Debemos cargar los dos ficheros y almacenarlos en dos estructuras de datos (DataFrames de Pandas) separadas. Por un lado, tendremos almacenada la información de las películas y sus créditos.
+- residual sugar, chlorides
 
-#### Paso 2: Creación de una base de datos
+- free sulfur dioxide, total sulfur dioxide
 
-Crea una base de datos para almacenar los dos DataFrames en tablas distintas. A continuación, une las dos tablas con SQL (e intégralo con Python) para generar una tercera tabla que contenga información de ambas unificada. La clave a través de la cual se puede hacer la unión es el título de la película (`titulo`).
+- density, pH, sulphates, alcohol
 
-Ahora, limpia la tabla generada y deja solo las siguientes columnas:
+La columna objetivo es **label**:
 
-- `movie_id`
-- `title`
-- `overview`
-- `genres`
-- `keywords`
-- `cast`
-- `crew`
+- 0 = Baja calidad
 
-#### Paso 3: Transforma los datos
+- 1 = Calidad media
 
-Como puedes ver, hay algunas columnas con formato JSON. De cada uno de los JSONs, selecciona el atributo `name` y reemplaza las columnas `genres` y `keywords`. Para la columna `cast`, selecciona los tres primeros nombres.
+- 2 = Alta calidad
 
-Las únicas columnas que quedan por modificar son `crew` (equipo) y `overview` (resumen). Para la primera columna, transfórmala para que contenga el nombre del director. Para la segunda, conviértela en una lista.
+### ¡Empecemos! 😎
 
-Una vez hayamos terminado de procesar las columnas y que el modelo de recomendación no se confunda, por ejemplo, entre *Jennifer Aniston* y *Jennifer Conelly*, quitaremos los espacios entre las palabras. Aplica esta función a las columnas `genres`, `cast`, `crew` y `keywords`.
+1. **Carga los datos.** Carga el CSV con Pandas y explora su estructura.
+2. **Entrena el modelo KNN:**
+    - Separa las variables independientes (X) del objetivo (y).
 
-Por último, reduciremos nuestro conjunto de datos combinando todas nuestras columnas convertidas anteriores en una sola columna llamada `tags` (que crearemos). Esta columna ahora tendrá todos los elementos separados por comas y luego las reemplazaremos por espacios en blanco. Debería quedar algo así:
+    - Divide en conjunto de entrenamiento y prueba (80/20).
 
-```py
-new_df["tags"][0]
+    - Escala los datos si es necesario (¡muy recomendable con KNN!).
 
->>>>"In the 22nd century, a paraplegic Marine is dispatched to the moon Pandora on a unique mission, but becomes torn between following orders and protecting an alien civilization. Action Adventure Fantasy ScienceFiction cultureclash future spacewar spacecolony society spacetravel futuristic romance space alien tribe alienplanet cgi marine soldier battle loveaffair antiwar powerrelations mindandsoul 3d SamWorthington ZoeSaldana SigourneyWeaver JamesCameron"
-```
+    - Entrena el modelo con un valor de k inicial.
 
-#### Paso 4: Construye un KNN
+3. Evalúa el rendimiento usando:
 
-Para resolver este problema crearemos nosotros nuestro propio KNN. Lo primero de todo es vectorizar el texto siguiendo los mismos pasos que aprendiste en la lección anterior.
+    - `accuracy_score`
 
-Una vez lo hayas hecho, tendríamos que elegir una distancia para comparar texto. En este módulo hemos visto algunas, y la única compatible con lo que queremos hacer es la `distancia coseno`:
+    - `confusion_matrix`
 
-```py
-from sklearn.metrics.pairwise import cosine_similarity
+    - `classification_report`
 
-similarity = cosine_similarity(vectors)
-```
+4. **Optimización de k.** Crea un bucle para probar diferentes valores de k (por ejemplo, de 1 a 20).
 
-Con este código podremos ver la similitud existente entre nuestros vectores (representaciones vectoriales de la columna `tags`).
+    - Guarda los resultados en una lista.
 
-Finalmente, podemos diseñar nuestra función de similitud basada en la distancia del coseno. Nuestra propuesta es la siguiente:
+    - Grafica accuracy vs k para encontrar el mejor valor.
 
-```py
-def recommend(movie):
-    movie_index = new_df[new_df["title"] == movie].index[0]
-    distances = similarity[movie_index]
-    movie_list = sorted(list(enumerate(distances)), reverse = True , key = lambda x: x[1])[1:6]
-    
-    for i in movie_list:
-        print(new_df.iloc[i[0]].title)
-```
+## ¿Te sientes confiado/a?
 
-De tal forma que devolveríamos las 5 películas más similares a la que introduzcamos en el título. Podríamos utilizarla como sigue:
+Crea una función que reciba valores numéricos y prediga la calidad
 
-```py
-recommend("Introduce una película")
+```python
+predict_wine_quality([7.4, 0.7, 0.0, 1.9, 0.076, 11.0, 34.0, 0.9978, 3.51, 0.56, 9.4])
+>>> "Este vino probablemente sea de calidad media 🍷"
 ```
 
 > Nota: También incorporamos muestras de solución en `./solution.ipynb` que te sugerimos honestamente que solo uses si estás atascado por más de 30 minutos o si ya has terminado y quieres compararlo con tu enfoque.
+
+
+## 🚛 Cómo entregar este proyecto
+
+Una vez que hayas terminado de resolver el caso práctico, asegúrate de confirmar tus cambios, haz push a tu repositorio y ve a 4Geeks.com para subir el enlace del repositorio.
