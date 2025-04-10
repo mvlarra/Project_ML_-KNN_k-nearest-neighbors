@@ -1,109 +1,92 @@
 <!-- hide -->
-# K-Nearest neighbors - Step by step guide
+# K-Nearest Neighbors - Step-by-Step Guide
 <!-- endhide -->
 
-- Understanding a new dataset.
+- Understand a new dataset.
 - Model the data using a KNN.
 - Analyze the results and optimize the model.
 
-<onlyfor saas="false" withBanner="false">
+<how-to-start>
 
 ## 🌱 How to start this project
 
-Follow the instructions below:
+Follow these instructions:
 
-1. Create a new repository based on [machine learning project](https://github.com/4GeeksAcademy/machine-learning-python-template) by [clicking here](https://github.com/4GeeksAcademy/machine-learning-python-template/generate).
+1. Create a new repository based on the [Machine Learning project](https://github.com/4GeeksAcademy/machine-learning-python-template) [by clicking here](https://github.com/4GeeksAcademy/machine-learning-python-template/generate).
 2. Open the newly created repository in Codespace using the [Codespace button extension](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace-for-a-repository#creating-a-codespace-for-a-repository).
-3. Once the Codespace VSCode has finished opening, start your project by following the instructions below.
+3. Once the Codespace's VSCode has finished opening, start your project by following the instructions below.
 
-</onlyfor>
-
-## 🚛 How to deliver this project
-
-Once you have finished solving the exercises, be sure to commit your changes, push them to your repository, and go to 4Geeks.com to upload the repository link.
+</how-to-start>
 
 ## 📝 Instructions
 
-### Movie recommendation system
+### Wine Classifier with KNN
 
-Would we be able to predict which movies might or might not be a commercial success? This dataset collects part of the knowledge from the API [TMDB](https://www.themoviedb.org/), which contains only 5000 movies out of the total number. The following resources are available:
+Train a K-Nearest Neighbors (KNN) model to predict the quality of red wine based on its chemical properties. Could AI help you choose a sommelier-worthy wine?
 
-- **tmdb_5000_movies**:
-
-```text
-https://raw.githubusercontent.com/4GeeksAcademy/k-nearest-neighbors-project-tutorial/main/tmdb_5000_movies.csv
-```
-
-- **tmdb_5000_credits**:
+We will use the following red wine dataset extracted from [Wine Quality Data Set - UCI](https://archive.ics.uci.edu/dataset/186/wine+quality)
 
 ```text
-https://raw.githubusercontent.com/4GeeksAcademy/k-nearest-neighbors-project-tutorial/main/tmdb_5000_credits.csv
+https://raw.githubusercontent.com/rosinni/k-nearest-neighbors-project-tutorial/refs/heads/main/winequality-red.csv
 ```
 
-#### Step 1: Loading the dataset
+#### Column Description
 
-We must load the two files and store them in two separate data structures (Pandas DataFrames). On one side, we will have stored the information about the movies and their credits.
+Each row represents a wine. The columns describe its chemical composition:
 
-#### Step 2: Creation of a database
+- fixed acidity, volatile acidity, citric acid
 
-Create a database to store the two DataFrames in separate tables. Then join the two tables with SQL (and integrate it with Python) to generate a third table containing information from both tables unified. The key through which the join can be done is the title of the movie (`title`).
+- residual sugar, chlorides
 
-Now, clean the generated table and leave only the following columns:
+- free sulfur dioxide, total sulfur dioxide
 
-- `movie_id`
-- `title`
-- `overview`
-- `genres`
-- `keywords`
-- `cast`
-- `crew`
+- density, pH, sulphates, alcohol
 
-#### Step 3: Transform the data
+The target column is **label**:
 
-As you can see, there are some JSON formatted columns. From each of the JSONs, select the `name` attribute and replace the `genres` and `keywords` columns. For the `cast` column, select the first three names.
+- 0 = Low quality
 
-The only columns left to modify are `crew` (team) and `overview` (summary). For the first column, convert it to contain the name of the director. For the second, convert it to a list.
+- 1 = Medium quality
 
-Once we have finished processing the columns and the recommendation model is not confused, for example, between *Jennifer Aniston* and *Jennifer Conelly*, we will remove the spaces between the words. Apply this function to the columns `genres`, `cast`, `crew` and `keywords`.
+- 2 = High quality
 
-Finally, we will reduce our dataset by combining all of our previous converted columns into a single column called `tags` (which we will create). This column will now have all the elements separated by commas and then we will replace them with blanks. It should look something like this:
+### Let's get started! 😎
 
-```py
-new_df["tags"][0]
+1. **Load the data.** Load the CSV with Pandas and explore its structure.
+2. **Train the KNN model:**
+    - Separate the independent variables (X) from the target (y).
 
->>>>"In the 22nd century, a paraplegic Marine is dispatched to the moon Pandora on a unique mission, but becomes torn between following orders and protecting an alien civilization. Action Adventure Fantasy ScienceFiction cultureclash future spacewar spacecolony society spacetravel futuristic romance space alien tribe alienplanet cgi marine soldier battle loveaffair antiwar powerrelations mindandsoul 3d SamWorthington ZoeSaldana SigourneyWeaver JamesCameron"
+    - Split into training and testing sets (80/20).
+
+    - Scale the data if necessary (highly recommended with KNN!).
+
+    - Train the model with an initial k value.
+
+3. Evaluate performance using:
+
+    - `accuracy_score`
+
+    - `confusion_matrix`
+
+    - `classification_report`
+
+4. **Optimize k.** Create a loop to test different k values (e.g., from 1 to 20).
+
+    - Save the results in a list.
+
+    - Plot accuracy vs k to find the best value.
+
+## Feeling confident?
+
+Create a function that takes numerical values and predicts the quality:
+
+```python
+predict_wine_quality([7.4, 0.7, 0.0, 1.9, 0.076, 11.0, 34.0, 0.9978, 3.51, 0.56, 9.4])
+>>> "This wine is likely of medium quality 🍷"
 ```
 
-#### Step 4: Build a KNN
+> Note: We also provide solution samples in `./solution.ipynb`, which we honestly suggest you only use if you're stuck for more than 30 minutes or if you've already finished and want to compare it with your approach.
 
-To solve this problem we will create our own KNN. The first thing to do is to vectorize the text, following the same steps you learned in the previous lesson.
+## 🚛 How to deliver this project
 
-Once you have done that, we will have to choose a distance to compare texts. In this module we have seen a few, and the only one compatible with what we want to do is the `cosine distance`:
-
-```py
-from sklearn.metrics.pairwise import cosine_similarity
-
-similarity = cosine_similarity(vectors)
-```
-
-With this code, we can see the similarity between our vectors (vector representations of the `tags` column).
-
-Finally, we can design our similarity function based on the cosine distance. Our proposal is as follows:
-
-```py
-def recommend(movie):
-    movie_index = new_df[new_df["title"] == movie].index[0]
-    distances = similarity[movie_index]
-    movie_list = sorted(list(enumerate(distances)), reverse = True , key = lambda x: x[1])[1:6]
-    
-    for i in movie_list:
-        print(new_df.iloc[i[0]].title)
-```
-
-In such a way that we would return the 5 movies most similar to the one we enter in the title. We could use it as follows:
-
-```py
-recommend("Enter a film name")
-```
-
-> Note: We also incorporated the solution samples on `./solution.ipynb` that we strongly suggest you only use if you are stuck for more than 30 min or if you have already finished and want to compare it with your approach.
+Once you have finished solving the case study, make sure to commit your changes, push to your repository, and go to 4Geeks.com to submit the repository link.
