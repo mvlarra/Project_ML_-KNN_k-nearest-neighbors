@@ -27,7 +27,7 @@ Train a K-Nearest Neighbors (KNN) model to predict the quality of red wine based
 We will use the following red wine dataset extracted from [Wine Quality Data Set - UCI](https://archive.ics.uci.edu/dataset/186/wine+quality)
 
 ```text
-https://raw.githubusercontent.com/4GeeksAcademy/k-nearest-neighbors-project-tutorial/main/winequality-red.csv
+https://raw.githubusercontent.com/rosinni/k-nearest-neighbors-project-tutorial/refs/heads/main/winequality-red.csv
 ```
 
 #### Column Description

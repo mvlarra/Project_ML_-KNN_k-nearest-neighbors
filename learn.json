@@ -1,6 +1,13 @@
 {
 	"slug" : "k-nearest-neighbors-project-tutorial",
-	"title" : "K-nearest neighbors Project Tutorial",
+	"title": {
+		"us": "K-nearest neighbors Project Tutorial",
+		"es": "Tutorial del Proyecto K-vecinos más Cercanos"
+	},
+	"description": {
+		"us": "Train a KNN model to predict the quality of red wine using chemical features. Learn to optimize the model and analyze results.",
+		"es": "Entrena un modelo KNN para predecir la calidad de un vino tinto utilizando características químicas. Aprende a optimizar el modelo y analizar resultados."
+	},
 	"preview": "https://github.com/4GeeksAcademy/k-nearest-neighbors-project-tutorial/blob/main/preview.png?raw=true",
 	"solution": "https://github.com/4GeeksAcademy/k-nearest-neighbors-project-tutorial/blob/main/solution.ipynb",
 	"status": "published",
@@ -11,6 +18,5 @@
     "projectType": "project",
 	"autoPlay": "false",
 	"duration" : 2,
-	"template_url": "https://github.com/4GeeksAcademy/machine-learning-python-template",
-	"description" : "Use KNN algorithm to build a simple movie recommender system."
+	"template_url": "https://github.com/4GeeksAcademy/machine-learning-python-template"
 }
